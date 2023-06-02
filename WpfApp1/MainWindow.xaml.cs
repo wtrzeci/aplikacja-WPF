@@ -34,7 +34,7 @@ namespace WpfApp1
             Items = new List<Item>();
             foreach (var name in Environment.GetLogicalDrives())
             {
-                var temp = itemProvider.GetItems(".");
+                var temp = itemProvider.GetItems(name);
                 Items.AddRange(temp);
                
             }//C:\\ tez dziala ale laduje sie wieki 
@@ -60,6 +60,8 @@ namespace WpfApp1
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
+            currentItem = new Item();
+            OnPropertyChanged("currentItem");
             ListBox.Items.Clear();
             var dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.ShowDialog();
@@ -75,6 +77,7 @@ namespace WpfApp1
                     AddImagesToBlocks(item);
                 }
             }
+           
 
         }
         private void AddImagesToBlocks(Item tt)
@@ -245,7 +248,7 @@ namespace WpfApp1
     }
     public class ItemProvider
     {
-        public List<Item> GetItems(string path)
+        public List<Item> GetItems(string path, int depth=1)
         {
             var items = new List<Item>();
             var dir = new DirectoryItem();
@@ -261,10 +264,12 @@ namespace WpfApp1
                     var item = new DirectoryItem
                     {
                         Name = directory.Name,
-                        Path = directory.FullName,
-                        Items = GetItems(directory.FullName)
-                    };
+                        Path = directory.FullName
+                        
 
+                    };
+                    if (depth < 3)
+                        item.Items = GetItems(directory.FullName, depth + 1);
                     dir.Items.Add(item);
                 }
 
