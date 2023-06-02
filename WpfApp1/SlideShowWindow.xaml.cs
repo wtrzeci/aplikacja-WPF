@@ -24,6 +24,7 @@ namespace WpfApp1
         DoubleAnimation animation;
         int WindowWidth = 1024;
         int WindowHeight = 768;
+        public int startAnim = 0;
         public TransitionEffect SelectedEffect { get; set; }
         public List<Item> Images { get; set; }
         public int currentIndex;
@@ -44,21 +45,60 @@ namespace WpfApp1
            
             timer.Start();
 
-            
-            DisplayCurrentImage(SelectedEffect);
+
+            Item currentImage = Images[currentIndex];
+
+            var uri = new Uri(currentImage.Path);
+            var bitmap = new BitmapImage(uri);
+            Image image = new Image();
+            image.Source = new ImageSourceConverter().ConvertFromString(currentImage.Path) as ImageSource;
+            imageControl = image;
+
+            image.Opacity = 1;
+
+            ImageGrid.Children.Clear();
+
+
+            Grid.SetRow(image, 0);
+            Grid.SetColumn(image, 0);
+            ImageGrid.Children.Add(image);
         }
         private void Timer_Tick(object sender, EventArgs e)
         {
             //timer wziety ze stacka :)
             
-            currentIndex++;
+           
             if (currentIndex >= Images.Count)
             {
+                currentIndex = 0;
                 this.Close();
+               
             }
+            startAnim++;
+            if (startAnim % 2 == 1) {
+                DisplayCurrentImage(SelectedEffect);
+                currentIndex++;
+            }
+            else
+            {
 
-            
-            DisplayCurrentImage(SelectedEffect);
+                Item currentImage = Images[currentIndex];
+
+                var uri = new Uri(currentImage.Path);
+                var bitmap = new BitmapImage(uri);
+                Image image = new Image();
+                image.Source = new ImageSourceConverter().ConvertFromString(currentImage.Path) as ImageSource;
+                imageControl = image;
+                
+                image.Opacity = 1; 
+                                  
+                ImageGrid.Children.Clear();
+
+               
+                Grid.SetRow(image, 0); 
+                Grid.SetColumn(image, 0); 
+                ImageGrid.Children.Add(image);
+            }
         }
         private void DisplayCurrentImage(TransitionEffect animationType)
         {
@@ -71,9 +111,9 @@ namespace WpfApp1
                 Image image = new Image();
                 image.Source = new ImageSourceConverter().ConvertFromString(currentImage.Path) as ImageSource;
                 imageControl = image;
-                // Apply animation to the image
-                image.Opacity = 0; // Start with zero opacity
-                // Determine the animation based on the specified animation type
+                
+                image.Opacity = 0; 
+                
                 switch (animationType)
                 {
                     case TransitionEffect.Horizontal:
@@ -99,9 +139,9 @@ namespace WpfApp1
                     case TransitionEffect.Vertical:
                         DoubleAnimation qwdedqw = new DoubleAnimation
                         {
-                            From = 0, // Start with zero opacity
+                            From = 0, 
                             To = 1,
-                            Duration = TimeSpan.FromSeconds(1) // Adjust the duration as needed
+                            Duration = TimeSpan.FromSeconds(1) 
                         };
                         image.BeginAnimation(Image.OpacityProperty, qwdedqw);
                         DoubleAnimation asdassada = new DoubleAnimation
@@ -119,9 +159,9 @@ namespace WpfApp1
                     case TransitionEffect.Opacity:
                         DoubleAnimation opacityAnimation = new DoubleAnimation
                         {
-                            From = 0, // Start with zero opacity
+                            From = 0,
                             To = 1,
-                            Duration = TimeSpan.FromSeconds(1) // Adjust the duration as needed
+                            Duration = TimeSpan.FromSeconds(1) 
                         };
                         image.BeginAnimation(Image.OpacityProperty, opacityAnimation);
                         animation = opacityAnimation;
@@ -131,12 +171,12 @@ namespace WpfApp1
                         break;
                 }
 
-                // Remove any existing images from the Grid
+                
                 ImageGrid.Children.Clear();
 
-                // Add the image to the Grid
-                Grid.SetRow(image, 0); // Set the row position of the image in the Grid
-                Grid.SetColumn(image, 0); // Set the column position of the image in the Grid
+                
+                Grid.SetRow(image, 0); 
+                Grid.SetColumn(image, 0); 
                 ImageGrid.Children.Add(image);
             }
         }
