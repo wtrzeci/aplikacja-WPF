@@ -60,6 +60,7 @@ namespace WpfApp1
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
+            ListBox.Items.Clear();
             var dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.ShowDialog();
             string sFileName = dialog.SelectedPath;
@@ -68,16 +69,21 @@ namespace WpfApp1
             images = new List<Item>();
             DirectoryItem directory = (DirectoryItem)temp[0];
             foreach (var item in directory.Items) {
-                if(item.IsJPG)
+                if (item.IsJPG)
+                {
+                    images.Add(item);
                     AddImagesToBlocks(item);
+                }
             }
 
         }
         private void AddImagesToBlocks(Item tt)
         {
             var border = new Border();
-            border.BorderThickness = new Thickness(0);
-            border.Background = Brushes.Transparent;
+            border.Background = Brushes.White;
+            border.BorderBrush = Brushes.Gray;
+            border.BorderThickness = new Thickness(1);
+            border.Margin = new Thickness(5);
 
             var temp = new ListBoxItem();
             temp.DataContext = tt;
@@ -109,13 +115,14 @@ namespace WpfApp1
             temp.Content = grid;
 
             border.Child = temp;
-            //Shadow Effect ze stacka :)
+
+            // Apply shadow effect to the border
             var dropShadowEffect = new DropShadowEffect();
             dropShadowEffect.Color = Colors.Black;
-            dropShadowEffect.Opacity = 0.6;
+            dropShadowEffect.Opacity = 0.5;
             dropShadowEffect.Direction = 270;
             dropShadowEffect.ShadowDepth = 5;
-            dropShadowEffect.BlurRadius = 20;
+            dropShadowEffect.BlurRadius = 10;
             border.Effect = dropShadowEffect;
 
             ListBox.Items.Add(border);
@@ -126,6 +133,78 @@ namespace WpfApp1
         {
             currentItem =(Item) (((ListBoxItem) sender).DataContext);
             OnPropertyChanged("currentItem");
+        }
+
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+
+            this.IsEnabled = false;
+
+           
+            SlideShowWindow slideshowWindow = new SlideShowWindow(images,TransitionEffect.Horizontal);
+            slideshowWindow.Owner = this;
+            slideshowWindow.ShowDialog();
+            this.IsEnabled = true;
+
+        }
+
+        private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+        {
+            this.IsEnabled = false;
+
+
+            SlideShowWindow slideshowWindow = new SlideShowWindow(images, TransitionEffect.Vertical);
+            slideshowWindow.Owner = this;
+            slideshowWindow.ShowDialog();
+            this.IsEnabled = true;
+        }
+
+        private void MenuItem_Click_3(object sender, RoutedEventArgs e)
+        {
+            this.IsEnabled = false;
+
+
+            SlideShowWindow slideshowWindow = new SlideShowWindow(images, TransitionEffect.Opacity);
+            slideshowWindow.Owner = this;
+            slideshowWindow.ShowDialog();
+            this.IsEnabled = true;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ComboBoxItem typeItem = (ComboBoxItem)ComboBox.SelectedItem;
+            if((string)typeItem.Content== "Opacity")
+            {
+                this.IsEnabled = false;
+
+
+                SlideShowWindow slideshowWindow = new SlideShowWindow(images, TransitionEffect.Opacity);
+                slideshowWindow.Owner = this;
+                slideshowWindow.ShowDialog();
+                this.IsEnabled = true;
+            }
+            else if ((string)typeItem.Content == "Verticaly")
+            {
+                this.IsEnabled = false;
+
+
+                SlideShowWindow slideshowWindow = new SlideShowWindow(images, TransitionEffect.Vertical);
+                slideshowWindow.Owner = this;
+                slideshowWindow.ShowDialog();
+                this.IsEnabled = true;
+            }
+            else if ((string)typeItem.Content == "Horizontaly")
+            {
+                this.IsEnabled = false;
+
+
+                SlideShowWindow slideshowWindow = new SlideShowWindow(images, TransitionEffect.Horizontal);
+                slideshowWindow.Owner = this;
+                slideshowWindow.ShowDialog();
+                this.IsEnabled = true;
+            }
+            
+
         }
     }
 
@@ -216,5 +295,12 @@ namespace WpfApp1
             catch { }
             return items;
         }
+    }
+    public enum TransitionEffect
+    {
+        None,
+        Horizontal,
+        Vertical,
+        Opacity
     }
 }

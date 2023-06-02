@@ -30,7 +30,7 @@
                 <ColumnDefinition Width="30*"/>
                 <ColumnDefinition Width="70*"/>
             </Grid.ColumnDefinitions>
-            <ListBox Grid.Column="1" Name="ListBox" MouseLeftButtonDown="ListBox_MouseLeftButtonDown">
+            <ListBox Grid.Column="1" Name="ListBox" MouseLeftButtonDown="ListBox_MouseLeftButtonDown"  >
                 <ListBox.Template>
                     <ControlTemplate>
                         <WrapPanel IsItemsHost="True"/>
@@ -38,10 +38,15 @@
                 </ListBox.Template>
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="BorderBrush" Value="Gray"/>
+                        <Setter Property="Margin" Value="5"/>
                         <Setter Property="Height" Value="100"/>
                         <Setter Property="Width" Value="100"/>
                     </Style>
                 </ListBox.ItemContainerStyle>
+                
             </ListBox>
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
@@ -99,6 +104,20 @@
                        
                           
                     </Expander>
+                    <Expander Header="File Info">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                        <ComboBox Name="ComboBox">
+                            <ComboBoxItem>Opacity</ComboBoxItem>
+                            <ComboBoxItem IsSelected="True">Verticaly</ComboBoxItem>
+                            <ComboBoxItem>Horizontaly</ComboBoxItem>
+                        </ComboBox>
+                            <Button  Content="LetsGO" Grid.Row="1" Click="Button_Click"></Button>
+                        </Grid>
+                    </Expander>
                 </ListView>
             </Grid>
         </Grid>
@@ -108,8 +127,9 @@
                 <MenuItem Header="Exit" />
             </MenuItem>
             <MenuItem Header="StartSlideShow" >
-                <MenuItem Header="Open Folder" Click="MenuItem_Click"/>
-                <MenuItem Header="Exit" />
+                <MenuItem Header="Horizontal Effect" Click="MenuItem_Click_1"/>
+                <MenuItem Header="vertical effect" Click="MenuItem_Click_2"/>
+                <MenuItem Header="opacity effect" Click="MenuItem_Click_3"/>
             </MenuItem>
             <MenuItem Header="About"/>
             
